@@ -19,6 +19,5 @@ loop=loop)
 
 message = 'Hello World!'
 loop = asyncio.get_event_loop()
-loop.run_until_complete(tcp_echo_client(message, 
-loop))
+loop.run_until_complete(tcp_echo_client(message, loop))
 loop.close()
