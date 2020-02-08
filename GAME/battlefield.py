@@ -3,14 +3,14 @@ import cv2
 
 field_w = 500 #height and wifth of the battlefield
 field_h = 500
-framein = np.zeros((field_w, field_h, 3), dtype="uint8")
-#cv2.line(framein, (100, 100), (90, 90), (255, 0, 0), 3)
 
+framein = np.zeros((field_w, field_h, 3), dtype="uint8")
+cv2.imshow('try', framein)
+
+# Set the border of the field
 corner_pointer = 0
 boundary_corners = [(0, 0),(0, 0)]
-corner_pointer = 0
-#cv2.rectangle(iminput, boundary_corners[0], boundary_corners[1], (255, 0, 0), 5)
-#cv2.polylines(framein, [boundary_corners], True, (255, 0, 0), 3)
+set_boundary = True
 
 def define_corners(event, x, y, flags, userdata):
     global corner_pointer
@@ -31,23 +31,43 @@ def define_corners(event, x, y, flags, userdata):
         boundary_corners[corner_pointer] = first_point
         draw_lines(boundary_corners[0], boundary_corners[1])
         corner_pointer = 5
+        border_set_done()
 
     
 def draw_lines(corners1, corners2):
     cv2.line(framein, corners1, corners2, (255, 0, 0), 3)
     cv2.imshow('try', framein)
 
-cv2.imshow('try', framein)
+def border_set_done():
+    set_boundary = False
+
+#while (True):
+    #cv2.imshow('try', framein)
 cv2.setMouseCallback('try', define_corners)
+    #if (set_boundary == False):
+        #break
+while (True):
+    cv2.imshow('try', framein)
+    if (set_boundary == False):
+        break
+
+#Get the pixels of the border
+print('dai dai che ce la si fa')
+border_px = np.where(framein == (255, 0, 0))
+
+
+
+
+
+
+
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-# class boundary:
-#     def __init__(self, corner_coordintes):
-#         self.corners = corner_coordintes
+class boundary:
+    def __init__(self, image):
+        self.border = np.where(image == (255, 0, 0))
 
-#     def create_rectangle(self):
-#         cv2.rectangle(img, self.corners[0], self.corners[1], (255, 0, 0), 5)
 
 #class bot:
