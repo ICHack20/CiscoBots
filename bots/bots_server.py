@@ -55,11 +55,13 @@ f = open("ip.txt", "r")
 lines = f.readlines()
 f.close()
 
-ip = None
+ip = None   
 if hostname == "raspberrypi1":
     ip = lines[0]
 elif hostname == "raspberrypi2":
     ip = lines[1]
+
+ip = ip.strip()
 
 start_server = websockets.serve(control, ip, 8765)
 
