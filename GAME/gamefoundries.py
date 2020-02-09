@@ -8,6 +8,7 @@ class Arena:
         self.corner_pointer = 0
         self.boundary_corners = [(0, 0),(0, 0)]
         self.first_point = (0, 0)
+        self.corners = []
         self.set_boundary = True
         self.image = image
         self.frame_name = frame_name
@@ -17,6 +18,7 @@ class Arena:
             self.boundary_corners[self.corner_pointer] = (x, y)
             if (self.corner_pointer == 0):
                 self.first_point = (x, y)
+            self.corners.append((x, y))
             self.corner_pointer = self.corner_pointer + 1
 
             if (self.corner_pointer%2 == 0):
@@ -45,6 +47,9 @@ class Arena:
             cv2.setMouseCallback(self.frame_name, self.define_corners)
             cv2.waitKey(1)
     
+    def get_corners(self):
+        return self.corners
+    
     # def set_borders(self):
     #     cv2.setMouseCallback('try', self.define_corners)
     
@@ -52,7 +57,7 @@ class Arena:
         return self.set_boundary
 
 # construct the argument parser and parse the arguments
-def get_trackers(vs, frame_name):
+def get_trackers(vs, frame_name, corners):
     ap = argparse.ArgumentParser()
     ap.add_argument("-v", "--video", type=str,
         help="path to input video file")
@@ -98,6 +103,7 @@ def get_trackers(vs, frame_name):
             cv2.rectangle(frame, (x, y), (x + w, y + h), colors[i], 2)
             obj_locations.append([(x, y), (x + w, y + h), col_str[i]])
         # show the output frame
+        cv2.polylines(frame, [corners], (255,0,0), 2)
         cv2.imshow(frame_name, frame)
         key = cv2.waitKey(1) & 0xFF
 
@@ -154,7 +160,11 @@ arena.set_borders()
 #     arena.set_borders()
 #     cv2.waitKey(1)
 
-obj_locations = get_trackers(vs, frame_name)
+#Get the pixels of the border
+corners = np.asarray(arena.get_corners())
+border_px = np.where(np.all(frame == (255, 0, 0), -1))
+
+obj_locations = get_trackers(vs, frame_name, corners)
 print(obj_locations)
 
 # while ret:
@@ -164,18 +174,6 @@ print(obj_locations)
 #         break
 #     print(obj_locations)
 
-#Get the pixels of the border
-print(frame[arena.first_point[1], arena.first_point[0], :])
-
-# cv2.line(anatra, (100, 100), (100, 103), (255, 0, 0), 2)
-
-
-print("out of the loop")
-border_px = np.where(np.all(frame == (255, 0, 0), -1))
-# border_px = np.reshape(border_px, (len(border_px[0]),3))
-# print(len(border_px))
-# print(border_px[0])
-# print(border_px[0])
 
 
 
