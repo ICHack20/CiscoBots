@@ -42,16 +42,10 @@ while ret== True:
                     frame[i,j,a] = frame[i,j,a] + 50
                     
     img_sub = frame - avg_img
-<<<<<<< HEAD
-    
 
     obj_1, th1 = cv2.threshold(img_sub[:,:,1], 150, 255, cv2.THRESH_BINARY)
     #obj_2, th2 = cv2.threshold(img_sub[:,:,2], 150, 255, cv2.THRESH_BINARY)
-=======
-    obj_1, th1 = cv2.threshold(img_sub[:,:,1], 150, 255, cv2.THRESH_BINARY)
-    obj_2, th2 = cv2.threshold(img_sub[:,:,2], 150, 255, cv2.THRESH_BINARY)
->>>>>>> 56b6e54d03001de4375c82dabf06e8084ff69e88
-  
+
     cv2.imshow('c', th1)
     #cv2.imshow('f', th2)
     k = cv2.waitKey(30) & 0xFF1
