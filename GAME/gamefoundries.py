@@ -4,12 +4,13 @@ import cv2
 import time
 
 class Arena:
-    def __init__(self, image):
+    def __init__(self, image, frame_name):
         self.corner_pointer = 0
         self.boundary_corners = [(0, 0),(0, 0)]
         self.first_point = (0, 0)
         self.set_boundary = True
         self.image = image
+        self.frame_name = frame_name
 
     def define_corners(self, event, x, y, flags, userdata):
         if (event == cv2.EVENT_LBUTTONDOWN and self.corner_pointer != 5):
@@ -34,14 +35,14 @@ class Arena:
         
     def draw_lines(self, corners1, corners2):
         cv2.line(self.image, corners1, corners2, (255, 0, 0), 2)
-        cv2.imshow('try', self.image)
+        cv2.imshow(self.frame_name, self.image)
 
     def border_set_done(self):
         self.set_boundary = False
     
     def set_borders(self):
         while(self.set_boundary):
-            cv2.setMouseCallback('try', self.define_corners)
+            cv2.setMouseCallback(self.frame_name, self.define_corners)
             cv2.waitKey(1)
     
     # def set_borders(self):
@@ -53,7 +54,7 @@ class Arena:
 
 
 # construct the argument parser and parse the arguments
-def get_trackers(vs):
+def get_trackers(vs, frame_name):
     ap = argparse.ArgumentParser()
     ap.add_argument("-v", "--video", type=str,
         help="path to input video file")
@@ -82,7 +83,7 @@ def get_trackers(vs):
     # loop over frames from the video stream
     while ret:
         ret, frame = vs.read()
-        frame = frame[1] if args.get("video", False) else frame
+        frame = frame[1] if args.get(frame_name, False) else frame
         
         # check to see if we have reached the end of the stream
         if frame is None:
@@ -99,7 +100,7 @@ def get_trackers(vs):
             cv2.rectangle(frame, (x, y), (x + w, y + h), colors[i], 2)
             obj_locations.append([(x, y), (x + w, y + h), col_str[i]])
         # show the output frame
-        cv2.imshow("Frame", frame)
+        cv2.imshow(frame_name, frame)
         key = cv2.waitKey(1) & 0xFF
 
         # if the 's' key is selected, we are going to "select" a bounding
@@ -107,7 +108,7 @@ def get_trackers(vs):
         if key == ord("s"):
             # select the bounding box of the object we want to track (make
             # sure you press ENTER or SPACE after selecting the ROI)
-            box = cv2.selectROI("Frame", frame, fromCenter=False,
+            box = cv2.selectROI(frame_name, frame, fromCenter=False,
                     showCrosshair=True)
 
             # create a new object tracker for the bounding box and add it
@@ -120,7 +121,7 @@ def get_trackers(vs):
             break
 
     # if we are using a webcam, release the pointer
-    if not args.get("video", False):
+    if not args.get(frame_name, False):
         vs.release()
 
     # otherwise, release the file pointer
@@ -132,19 +133,19 @@ def get_trackers(vs):
 
     return obj_locations
 
-
+frame_name = "try"
 vs = cv2.VideoCapture(0)
 ret, frame = vs.read()
 while (ret):
     ret, frame = vs.read()
-    cv2.imshow("try", frame)
+    cv2.imshow(frame_name, frame)
     k = cv2.waitKey(1)
     if k==102:
         break
 
 print("lala land")
 
-arena = Arena(frame)
+arena = Arena(frame, frame_name)
 arena.set_borders()
 
 # arena = Arena(frame)
@@ -155,7 +156,7 @@ arena.set_borders()
 #     arena.set_borders()
 #     cv2.waitKey(1)
 
-obj_locations = get_trackers(vs)
+obj_locations = get_trackers(vs, frame_name)
 print(obj_locations)
 
 # while ret:
