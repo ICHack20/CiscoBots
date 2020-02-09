@@ -35,6 +35,8 @@ def get_trackers():
 
     vs = cv2.VideoCapture(0)
     ret, frame = vs.read()
+    
+    obj_locations = []
 
     # loop over frames from the video stream
     while ret:
@@ -57,7 +59,7 @@ def get_trackers():
         for i, box in enumerate(boxes):
             (x, y, w, h) = [int(v) for v in box]
             cv2.rectangle(frame, (x, y), (x + w, y + h), colors[i], 2)
-
+            obj_locations.append([(x, y), (x + w, y + h), col_str[i]])
         # show the output frame
         cv2.imshow("Frame", frame)
         key = cv2.waitKey(1) & 0xFF
