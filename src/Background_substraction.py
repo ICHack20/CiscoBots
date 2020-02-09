@@ -23,23 +23,25 @@ for i in range(len(frames)):
 
 #avg_img = avg_img/(len(frames)-1)
 
-cv2.imwrite('C:\\Users\\Joonsu\\source\\repos\\CiscoBots\\avg_img.jpg', avg_img )
+cv2.imwrite('H:\\ICHack\\avg_img.jpg', avg_img)
 cap.release()
 cv2.destroyAllWindows()
 
 cap = cv2.VideoCapture(0)
 ret, frame = cap.read()
 
-cv2.imshow('0', frame[:,:,0])
-cv2.imshow('1', frame[:,:,1])
-cv2.imshow('2', frame[:,:,2])
-cv2.imshow(' ', frame)
 
 while ret== True:
     ret, frame = cap.read()
+    for a in range(3):
+        for i in range(480):
+            for j in range(640):
+                if frame[i,j,a] > 100:
+                    frame[i,j,a] = frame[i,j,a] + 50
+                    
     img_sub = frame - avg_img
-    obj_1, th1 = cv2.threshold(img_sub[:,:,1]*2, 150, 255, cv2.THRESH_BINARY)
-    obj_2, th2 = cv2.threshold(img_sub[:,:,2]*2, 150, 255, cv2.THRESH_BINARY)
+    obj_1, th1 = cv2.threshold(img_sub[:,:,1], 150, 255, cv2.THRESH_BINARY)
+    obj_2, th2 = cv2.threshold(img_sub[:,:,2], 150, 255, cv2.THRESH_BINARY)
   
     cv2.imshow('c', th1)
     cv2.imshow('f', th2)
