@@ -5,6 +5,7 @@
 import argparse
 import time
 import cv2
+import numpy as np
 
 # construct the argument parser and parse the arguments
 def get_trackers():
@@ -27,7 +28,8 @@ def get_trackers():
         "mosse": cv2.TrackerMOSSE_create
     }
     obj_location = []
-
+    col_str = ['g','b']
+    j = 0
     # initialize OpenCV's special multi-object tracker
     trackers = cv2.MultiTracker_create()
 
@@ -45,10 +47,13 @@ def get_trackers():
         # grab the updated bounding box coordinates (if any) for each
         # object that is being tracked
         (success, boxes) = trackers.update(frame)
-
+        obj_location.append((boxes,col_str[0:j]))
+        
+        #print(success,boxes)
+        
         # loop over the bounding boxes and draw then on the frame
         colors = [((0, 255, 0)), (255, 0, 0)]
-        col_str = ['g','b']
+        #col_str = ['g','b']
         for i, box in enumerate(boxes):
             (x, y, w, h) = [int(v) for v in box]
             cv2.rectangle(frame, (x, y), (x + w, y + h), colors[i], 2)
@@ -69,12 +74,12 @@ def get_trackers():
             # to our multi-object tracker
             tracker = OPENCV_OBJECT_TRACKERS[args["tracker"]]()
             trackers.add(tracker, frame, box)
-            #obj_location.append(box, col_str[i])
+            j+=1
 
         # if the `q` key was pressed, break from the loop
         elif key == ord("q"):
             break
-
+        
     # if we are using a webcam, release the pointer
     if not args.get("video", False):
         vs.release()
@@ -86,7 +91,8 @@ def get_trackers():
     # close all windows
     cv2.destroyAllWindows()
 
-    return trackers
-
-(success, boxes) = get_trackers()
-print(trackers[2])
+    return obj_location
+    
+boxes = get_trackers()
+boxes = np.asarray(boxes)
+print(boxes[-1])
