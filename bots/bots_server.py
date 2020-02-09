@@ -48,11 +48,12 @@ async def control(websocket, path):
     await websocket.send(resp)
     print(f"> {resp}")
 
+import socket
+print(socket.gethostname())
 
-import urllib.request
-ex_ip = urllib.request.urlopen("https://ident.me").read().decode("utf8")
-
-print("ex ip: ", ex_ip)
+f = open("ip.txt", "r")
+ip = f.readlines()[0]
+f.close()
 
 start_server = websockets.serve(control, "127.0.0.1", 8765)
 
