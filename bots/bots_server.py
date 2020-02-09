@@ -48,7 +48,13 @@ async def control(websocket, path):
     await websocket.send(resp)
     print(f"> {resp}")
 
-start_server = websockets.serve(control, "172.20.10.8", 8765)
+
+import urllib.request
+ex_ip = urllib.request.urlopen("https://ident.me").read().decode("utf8")
+
+print(ex_ip) 
+
+start_server = websockets.serve(control, ex_ip, 8765)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
