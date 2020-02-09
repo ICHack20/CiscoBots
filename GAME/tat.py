@@ -4,11 +4,15 @@ import cv2
 import time
 
 class Arena:
-    def __init__(self, image):
+    def __init__(self, video):
         self.corner_pointer = 0
         self.boundary_corners = [(0, 0),(0, 0)]
         self.first_point = (0, 0)
         self.set_boundary = True
+        self.vs = video
+        self.ret, self.frame = self.vs.read()
+        
+    def set_frame(self, image):
         self.image = image
 
     def define_corners(self, event, x, y, flags, userdata):
@@ -33,14 +37,18 @@ class Arena:
 
         
     def draw_lines(self, corners1, corners2):
-        cv2.line(self.image, corners1, corners2, (255, 0, 0), 2)
-        cv2.imshow('try', self.image)
+        cv2.line(self.frame, corners1, corners2, (255, 0, 0), 2)
+        cv2.imshow('try', self.frame)
 
     def border_set_done(self):
         self.set_boundary = False
+
+    def show(self):
+        cv2.imshow('try', self.frame)
     
     def set_borders(self):
         while(self.set_boundary):
+            self.ret, self.frame = self.vs.read()
             cv2.setMouseCallback('try', self.define_corners)
             cv2.waitKey(1)
     
@@ -49,6 +57,59 @@ class Arena:
     
     def get_border_boolean(self):
         return self.set_boundary
+
+# class Arena:
+#     def __init__(self, image):
+#         self.corner_pointer = 0
+#         self.boundary_corners = [(0, 0),(0, 0)]
+#         self.first_point = (0, 0)
+#         self.set_boundary = True
+#         self.image = image
+        
+#     def set_frame(self, image):
+#         self.image = image
+
+#     def define_corners(self, event, x, y, flags, userdata):
+#         if (event == cv2.EVENT_LBUTTONDOWN and self.corner_pointer != 5):
+#             self.boundary_corners[self.corner_pointer] = (x, y)
+#             if (self.corner_pointer == 0):
+#                 self.first_point = (x, y)
+#             self.corner_pointer = self.corner_pointer + 1
+
+#             if (self.corner_pointer%2 == 0):
+#                 self.draw_lines(self.boundary_corners[0], self.boundary_corners[1])
+#                 self.boundary_corners[0] = self.boundary_corners[1]
+#                 self.corner_pointer = 1
+
+#         if (event == cv2.EVENT_RBUTTONDOWN):
+#             self.boundary_corners[self.corner_pointer] = self.first_point
+#             self.draw_lines(self.boundary_corners[0], self.boundary_corners[1])
+#             self.corner_pointer = 5
+#             self.border_set_done()
+        
+#         return self.border_set_done
+
+        
+#     def draw_lines(self, corners1, corners2):
+#         cv2.line(self.image, corners1, corners2, (255, 0, 0), 2)
+#         cv2.imshow('try', self.image)
+
+#     def border_set_done(self):
+#         self.set_boundary = False
+
+#     def show(self):
+#         cv2.imshow('try', self.image)
+    
+#     def set_borders(self):
+#         while(self.set_boundary):
+#             cv2.setMouseCallback('try', self.define_corners)
+#             cv2.waitKey(1)
+    
+#     # def set_borders(self):
+#     #     cv2.setMouseCallback('try', self.define_corners)
+    
+#     def get_border_boolean(self):
+#         return self.set_boundary
 
 
 
@@ -135,16 +196,10 @@ def get_trackers(vs):
 
 vs = cv2.VideoCapture(0)
 ret, frame = vs.read()
-while (ret):
-    ret, frame = vs.read()
-    cv2.imshow("try", frame)
-    k = cv2.waitKey(1)
-    if k==102:
-        break
-
+cv2.imshow("try", frame)
 print("lala land")
 
-arena = Arena(frame)
+arena = Arena(vs)
 arena.set_borders()
 
 # arena = Arena(frame)
