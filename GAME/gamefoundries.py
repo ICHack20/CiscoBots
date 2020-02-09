@@ -56,6 +56,7 @@ class Arena:
     def get_border_boolean(self):
         return self.set_boundary
 
+
 def check_center(center, boundary, color):
     yin = False
     xin = False
@@ -79,6 +80,16 @@ def check_center(center, boundary, color):
     else:
         return (False, color)
 
+class Player:
+    def __init__(self, status):
+        self.score = 0
+        self.pl = status[1];
+    
+    def update_score(self, status):
+        if status[0] == True and score > 0:
+            score = score + 1
+            game_over = True;
+            
 # construct the argument parser and parse the arguments
 def get_trackers(vs, frame_name, corners):
     ap = argparse.ArgumentParser()
@@ -104,6 +115,7 @@ def get_trackers(vs, frame_name, corners):
 
     ret, frame = vs.read()
     obj_locations = []
+    
 
     # loop over frames from the video stream
     while ret:
@@ -151,7 +163,14 @@ def get_trackers(vs, frame_name, corners):
     # if we are using a webcam, release the pointer
     if not args.get(frame_name, False):
         vs.release()
-
+        
+    if game_over == True:
+        
+        player_1 = Player((True, 'g'))
+        player_2 = Player((False, 'b'))
+        ret = False
+        vs.release()
+        
     # otherwise, release the file pointer
     else:
         vs.release()
@@ -160,6 +179,7 @@ def get_trackers(vs, frame_name, corners):
     cv2.destroyAllWindows()
 
     return obj_locations
+        
 
 frame_name = "try"
 vs = cv2.VideoCapture(0)
