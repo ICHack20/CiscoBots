@@ -52,7 +52,7 @@ async def control(websocket, path):
 import urllib.request
 ex_ip = urllib.request.urlopen("https://ident.me").read().decode("utf8")
 
-print(ex_ip) 
+print("ex ip: ", ex_ip)
 
 start_server = websockets.serve(control, ex_ip, 8765)
 
