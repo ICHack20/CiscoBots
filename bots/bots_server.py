@@ -38,6 +38,8 @@ async def control(websocket, path):
     elif action == "left":
         print("going left")
         valid_move = True
+    elif action == "q":
+        exit()
     
     if valid_move and run_robot:
         robot.value = actions[action]

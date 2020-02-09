@@ -21,6 +21,9 @@ def key_press(event):
     elif event.key == "left":
         print("send left")
         asyncio.get_event_loop().run_until_complete(send_action("left"))
+    elif event.key == "q":
+        print("ending")
+        asyncio.get_event_loop().run_until_complete(send_action("q"))
 
 def main():
     fig = plt.figure()
