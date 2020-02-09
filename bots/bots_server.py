@@ -17,7 +17,7 @@ right_pins = (18, 23)
 
 robot = Robot(left_pins, right_pins)
 
-run_robot = False
+run_robot = True
 
 async def control(websocket, path):
     action = await websocket.recv()
