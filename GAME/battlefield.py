@@ -1,64 +1,69 @@
 import numpy as np
 import cv2
 
+class Arena:
+    def __init__(self, image):
+        self.corner_pointer = 0
+        self.boundary_corners = [(0, 0),(0, 0)]
+        self.first_point = (0, 0)
+        self.set_boundary = True
+        self.image = image
+
+    def define_corners(self, event, x, y, flags, userdata):
+        if (event == cv2.EVENT_LBUTTONDOWN and self.corner_pointer != 5):
+            self.boundary_corners[self.corner_pointer] = (x, y)
+            if (self.corner_pointer == 0):
+                self.first_point = (x, y)
+                print(self.first_point)
+            self.corner_pointer = self.corner_pointer + 1
+
+            if (self.corner_pointer%2 == 0):
+                self.draw_lines(self.boundary_corners[0], self.boundary_corners[1])
+                self.boundary_corners[0] = self.boundary_corners[1]
+                self.corner_pointer = 1
+
+        if (event == cv2.EVENT_RBUTTONDOWN):
+            self.boundary_corners[self.corner_pointer] = self.first_point
+            self.draw_lines(self.boundary_corners[0], self.boundary_corners[1])
+            self.corner_pointer = 5
+            self.border_set_done()
+        
+        return self.border_set_done
+
+        
+    def draw_lines(self, corners1, corners2):
+        cv2.line(self.image, corners1, corners2, (255, 0, 0), 3)
+        cv2.imshow('try', framein)
+
+    def border_set_done(self):
+        print('in')
+        self.set_boundary = False
+
+    def show(self):
+        cv2.imshow('try', self.image)
+    
+    def set_borders(self):
+        while(self.set_boundary):
+            cv2.setMouseCallback('try', self.define_corners)
+            cv2.waitKey(1)
+
+
 field_w = 500 #height and wifth of the battlefield
 field_h = 500
 
 framein = np.zeros((field_w, field_h, 3), dtype="uint8")
 cv2.imshow('try', framein)
 
-# Set the border of the field
-corner_pointer = 0
-boundary_corners = [(0, 0),(0, 0)]
-set_boundary = True
-
-def define_corners(event, x, y, flags, userdata):
-    global corner_pointer
-    global first_point
-    if (event == cv2.EVENT_LBUTTONDOWN and corner_pointer != 5):
-        boundary_corners[corner_pointer] = (x, y)
-        if (corner_pointer == 0):
-            first_point = (x, y)
-            print(first_point)
-        corner_pointer = corner_pointer + 1
-
-        if (corner_pointer%2 == 0):
-            draw_lines(boundary_corners[0], boundary_corners[1])
-            boundary_corners[0] = boundary_corners[1]
-            corner_pointer = 1
-
-    if (event == cv2.EVENT_RBUTTONDOWN):
-        boundary_corners[corner_pointer] = first_point
-        draw_lines(boundary_corners[0], boundary_corners[1])
-        corner_pointer = 5
-        border_set_done()
-
-    
-def draw_lines(corners1, corners2):
-    cv2.line(framein, corners1, corners2, (255, 0, 0), 3)
-    cv2.imshow('try', framein)
-
-def border_set_done():
-    set_boundary = False
-
-#while (True):
-    #cv2.imshow('try', framein)
-cv2.setMouseCallback('try', define_corners)
-    #if (set_boundary == False):
-        #break
-while (True):
-    cv2.imshow('try', framein)
-    if (set_boundary == False):
-        break
+arena = Arena(framein)
+arena.set_borders()
 
 #Get the pixels of the border
-print('dai dai che ce la si fa')
+print("out of the loop")
 border_px = np.where(framein == (255, 0, 0))
-
-
-
-
-
+print(len(border_px))
+print(border_px[0])
+print(border_px[0])
+print(border_px[0])
 
 
 
@@ -66,8 +71,10 @@ cv2.waitKey(0)
 cv2.destroyAllWindows()
 
 class boundary:
-    def __init__(self, image):
-        self.border = np.where(image == (255, 0, 0))
+    value = (255, 0, 0)
+
+#class bot1:
+
 
 
 #class bot:
