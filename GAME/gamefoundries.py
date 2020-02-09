@@ -51,8 +51,6 @@ class Arena:
     def get_border_boolean(self):
         return self.set_boundary
 
-
-
 # construct the argument parser and parse the arguments
 def get_trackers(vs, frame_name):
     ap = argparse.ArgumentParser()
