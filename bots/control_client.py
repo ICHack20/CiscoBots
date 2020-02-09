@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import asyncio
 import websockets
 
-async def send_action(action, uri="ws://localhost:8765"):
+async def send_action(action, uri="ws://172.20.10.8:8765"):
     async with websockets.connect(uri) as websocket:
         await websocket.send(action)
         resp = await websocket.recv()

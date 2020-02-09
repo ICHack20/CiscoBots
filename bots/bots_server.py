@@ -42,7 +42,7 @@ async def control(websocket, path):
     if valid_move and run_robot:
         robot.value = actions[action]
 
-    resp = f"{action}-{msg}"
+    resp = f"{action}"
     await websocket.send(resp)
     print(f"> {resp}")
 
