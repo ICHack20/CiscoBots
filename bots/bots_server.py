@@ -49,13 +49,19 @@ async def control(websocket, path):
     print(f"> {resp}")
 
 import socket
-print(socket.gethostname())
+hostname = socket.gethostname()
 
 f = open("ip.txt", "r")
-ip = f.readlines()[0]
+lines = f.readlines()
 f.close()
 
-start_server = websockets.serve(control, "127.0.0.1", 8765)
+ip = None
+if hostname == "raspberrypi1":
+    ip = lines[0]
+elif hostname == "raspberrypi2":
+    ip = lines[1]
+
+start_server = websockets.serve(control, ip, 8765)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
