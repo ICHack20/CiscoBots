@@ -44,9 +44,9 @@ class Arena:
 
     def show(self):
         cv2.imshow('try', self.image)
-    
+    """
     def set_borders(self):
-        cv2.setMouseCallback('try', self.define_corners)
+        cv2.setMouseCallback('try', self.define_corners) """
 
 
 
@@ -137,8 +137,9 @@ arena = Arena(frame)
 while(arena.set_boundary):
     ret, frame = vs.read()
     arena.set_frame(frame)
-    arena.set_borders()
-    cv2.waitKey(1)
+    """arena.set_borders()"""
+    cv2.setMouseCallback('try', arena.define_corners)
+    #cv2.waitKey(1)
 
 
 while ret:
