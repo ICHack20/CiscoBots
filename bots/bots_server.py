@@ -54,7 +54,7 @@ ex_ip = urllib.request.urlopen("https://ident.me").read().decode("utf8")
 
 print("ex ip: ", ex_ip)
 
-start_server = websockets.serve(control, ex_ip, 8765)
+start_server = websockets.serve(control, "127.0.0.1", 8765)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
