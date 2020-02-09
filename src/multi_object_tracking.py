@@ -26,13 +26,13 @@ def get_trackers():
         "medianflow": cv2.TrackerMedianFlow_create,
         "mosse": cv2.TrackerMOSSE_create
     }
-    obj_location = []
-
     # initialize OpenCV's special multi-object tracker
     trackers = cv2.MultiTracker_create()
 
     vs = cv2.VideoCapture(0)
     ret, frame = vs.read()
+    
+    obj_locations = []
 
     # loop over frames from the video stream
     while ret:
@@ -52,7 +52,7 @@ def get_trackers():
         for i, box in enumerate(boxes):
             (x, y, w, h) = [int(v) for v in box]
             cv2.rectangle(frame, (x, y), (x + w, y + h), colors[i], 2)
-
+            obj_locations.append([(x, y), (x + w, y + h), col_str[i]])
         # show the output frame
         cv2.imshow("Frame", frame)
         key = cv2.waitKey(1) & 0xFF
@@ -69,8 +69,7 @@ def get_trackers():
             # to our multi-object tracker
             tracker = OPENCV_OBJECT_TRACKERS[args["tracker"]]()
             trackers.add(tracker, frame, box)
-            #obj_location.append(box, col_str[i])
-
+            #
         # if the `q` key was pressed, break from the loop
         elif key == ord("q"):
             break
@@ -86,7 +85,8 @@ def get_trackers():
     # close all windows
     cv2.destroyAllWindows()
 
-    return trackers
+    return obj_locations
 
-(success, boxes) = get_trackers()
-print(trackers[2])
+obj_locations = get_trackers()
+print(obj_locations)
+
