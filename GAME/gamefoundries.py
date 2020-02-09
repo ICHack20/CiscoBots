@@ -88,9 +88,6 @@ def check_center(center, boundary, color):
     else:
         return (False, color)
 
-
-
-
 # construct the argument parser and parse the arguments
 def get_trackers(vs, frame_name, corners):
     ap = argparse.ArgumentParser()
@@ -115,7 +112,6 @@ def get_trackers(vs, frame_name, corners):
     trackers = cv2.MultiTracker_create()
 
     ret, frame = vs.read()
-    
     obj_locations = []
 
     # loop over frames from the video stream
@@ -136,8 +132,10 @@ def get_trackers(vs, frame_name, corners):
         for i, box in enumerate(boxes):
             (x, y, w, h) = [int(v) for v in box]
             cv2.rectangle(frame, (x, y), (x + w, y + h), colors[i], 2)
-            obj_locations.append([(x, y), (x + w, y + h), col_str[i]])
+            centre_loc = (x+w-int(w/2), y+h-int(h/2))
+            obj_locations.append([(x, y), (x + w, y + h), centre_loc, col_str[i]])
         # show the output frame
+
         cv2.polylines(frame, [corners], True, (0,0,255), 2)
         cv2.imshow(frame_name, frame)
         key = cv2.waitKey(1) & 0xFF
@@ -199,8 +197,6 @@ check_center((255, 255), border_px, 'b')
 
 #obj_locations = get_trackers(vs, frame_name, corners)
 #print(obj_locations)
-
-
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
