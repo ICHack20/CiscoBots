@@ -63,7 +63,7 @@ while True:
 	for box in boxes:
 		(x, y, w, h) = [int(v) for v in box]
 		cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
+		
 	# show the output frame
 	cv2.imshow("Frame", frame)
 	key = cv2.waitKey(1) & 0xFF
@@ -92,6 +92,8 @@ if not args.get("video", False):
 # otherwise, release the file pointer
 else:
 	vs.release()
+
+
 
 # close all windows
 cv2.destroyAllWindows()
