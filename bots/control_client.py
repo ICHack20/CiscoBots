@@ -36,8 +36,11 @@ class Control:
         plt.show()
 
 if __name__=="__main__":
+    robot_to_control = input("enter 0 or 1:")
+    robot_to_control = int(robot_to_control)
+
     f = open("ip.txt", "r")
-    ip = f.readlines()[0]
+    ip = f.readlines()[robot_to_control]
     f.close()
     print(ip)
     c = Control(ip)
