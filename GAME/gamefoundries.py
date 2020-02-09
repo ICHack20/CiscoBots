@@ -36,7 +36,7 @@ class Arena:
 
         
     def draw_lines(self, corners1, corners2):
-        cv2.line(self.image, corners1, corners2, (255, 0, 0), 2)
+        cv2.line(self.image, corners1, corners2, (0, 0, 255), 2)
         cv2.imshow(self.frame_name, self.image)
 
     def border_set_done(self):
@@ -55,6 +55,39 @@ class Arena:
     
     def get_border_boolean(self):
         return self.set_boundary
+
+def check_center(center, boundary, color):
+    ymax = -1
+    xmax = -1
+    ymin = 10000
+    xmin = 10000
+    yin = False
+    xin = True
+
+    xindex = np.where(boundary[0] == center[0])
+    print(xindex)
+    for xval in xindex:
+        if boundary[1][xval] > ymax:
+            ymax = boundary[1][xval]
+        if boundary[1][xval] < ymin:
+            ymin = boundary[1][xval]
+    if (center[1] < ymax and center[1] > ymin):
+        yin = True
+
+    # yindex = np.where(boundary[1] == center[1])
+    # for yval in yindex:
+    #     if boundary[0][yval] > xmax:
+    #         xmax = boundary[0][yval]
+    #     if boundary[0][yval] < xmin:
+    #         xmin = boundary[0][yval]
+    # if (center[0] < xmax and center[0] > xmin):
+    #     xin = True
+
+    if (xin and yin):
+        return (True, color)
+    else:
+        return (False, color)
+
 
 
 
@@ -105,7 +138,7 @@ def get_trackers(vs, frame_name, corners):
             cv2.rectangle(frame, (x, y), (x + w, y + h), colors[i], 2)
             obj_locations.append([(x, y), (x + w, y + h), col_str[i]])
         # show the output frame
-        cv2.polylines(frame, [corners], True, (255,0,0), 2)
+        cv2.polylines(frame, [corners], True, (0,0,255), 2)
         cv2.imshow(frame_name, frame)
         key = cv2.waitKey(1) & 0xFF
 
@@ -121,7 +154,7 @@ def get_trackers(vs, frame_name, corners):
             # to our multi-object tracker
             tracker = OPENCV_OBJECT_TRACKERS[args["tracker"]]()
             trackers.add(tracker, frame, box)
-            #
+
         # if the `q` key was pressed, break from the loop
         elif key == ord("q"):
             break
@@ -146,36 +179,26 @@ while (ret):
     ret, frame = vs.read()
     cv2.imshow(frame_name, frame)
     k = cv2.waitKey(1)
-    if k==102:
+    if k==102: #f
         break
-
-print("lala land")
 
 arena = Arena(frame, frame_name)
 arena.set_borders()
 
-# arena = Arena(frame)
-# cv2.setMouseCallback('try', arena.define_corners)
-# while(arena.get_border_boolean and ret):
-#     ret, frame = vs.read()
-#     arena.set_frame(frame)
-#     arena.set_borders()
-#     cv2.waitKey(1)
-
 #Get the pixels of the border
-corners = np.asarray(arena.get_corners())
-border_px = np.where(np.all(frame == (255, 0, 0), -1))
+#corners = np.asarray(arena.get_corners())
+border_px = np.asarray(np.where(np.all(frame == (0, 0, 255), -1)))
+cv2.line(frame, (255, 255), (255, 251), (0,255,0), 1)
+# border_px = np.where(np.all(frame == (0, 0, 255), -1))
 
-obj_locations = get_trackers(vs, frame_name, corners)
-print(obj_locations)
+print(border_px.shape)
+print(border_px[0][20])
 
-# while ret:
-#     ret, frame = vs.read()
-#     obj_locations = get_trackers(ret, frame)
-#     if obj_locations == 0:
-#         break
-#     print(obj_locations)
+# print (check_center((255, 255), border_px, 'b'))
+check_center((255, 255), border_px, 'b')
 
+#obj_locations = get_trackers(vs, frame_name, corners)
+#print(obj_locations)
 
 
 
