@@ -57,31 +57,22 @@ class Arena:
         return self.set_boundary
 
 def check_center(center, boundary, color):
-    ymax = -1
-    xmax = -1
-    ymin = 10000
-    xmin = 10000
     yin = False
-    xin = True
+    xin = False
 
     xindex = np.where(boundary[0] == center[0])
-    print(xindex)
-    for xval in xindex:
-        if boundary[1][xval] > ymax:
-            ymax = boundary[1][xval]
-        if boundary[1][xval] < ymin:
-            ymin = boundary[1][xval]
+    print(boundary[0][xindex])
+    ymax = np.amax(boundary[1][xindex])
+    ymin = np.amin(boundary[1][xindex])
+    
     if (center[1] < ymax and center[1] > ymin):
         yin = True
 
-    # yindex = np.where(boundary[1] == center[1])
-    # for yval in yindex:
-    #     if boundary[0][yval] > xmax:
-    #         xmax = boundary[0][yval]
-    #     if boundary[0][yval] < xmin:
-    #         xmin = boundary[0][yval]
-    # if (center[0] < xmax and center[0] > xmin):
-    #     xin = True
+    yindex = np.where(boundary[1] == center[1])
+    xmax = np.amax(boundary[0][yindex])
+    xmin = np.amin(boundary[0][yindex])
+    if (center[0] < xmax and center[0] > xmin):
+        xin = True
 
     if (xin and yin):
         return (True, color)
@@ -184,19 +175,17 @@ arena = Arena(frame, frame_name)
 arena.set_borders()
 
 #Get the pixels of the border
-#corners = np.asarray(arena.get_corners())
-border_px = np.asarray(np.where(np.all(frame == (0, 0, 255), -1)))
-cv2.line(frame, (255, 255), (255, 251), (0,255,0), 1)
-# border_px = np.where(np.all(frame == (0, 0, 255), -1))
+corners = np.asarray(arena.get_corners())
+border_px = np.asarray(np.where(np.any(frame == [0, 0, 255], -1)))
 
 print(border_px.shape)
 print(border_px[0][20])
 
 # print (check_center((255, 255), border_px, 'b'))
-check_center((255, 255), border_px, 'b')
+print(check_center((255, 255), border_px, 'b'))
 
-#obj_locations = get_trackers(vs, frame_name, corners)
-#print(obj_locations)
+# obj_locations = get_trackers(vs, frame_name, corners)
+# print(obj_locations)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
