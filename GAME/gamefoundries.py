@@ -4,7 +4,7 @@ import cv2
 import time
 
 class Arena:
-    def __init__(self, image, frame_name):
+    def __init__(self, image, frame_name, pl_1, pl_2 ):
         self.corner_pointer = 0
         self.boundary_corners = [(0, 0),(0, 0)]
         self.first_point = (0, 0)
@@ -55,8 +55,17 @@ class Arena:
     
     def get_border_boolean(self):
         return self.set_boundary
-tat
 
+class Player:
+    def __init__(self, status):
+        self.score = 0
+        self.pl = status[1];
+    
+    def update_score(self, status):
+        if status[0] == True and score > 0:
+            score = score + 1
+            game_over = True;
+            
 # construct the argument parser and parse the arguments
 def get_trackers(vs, frame_name, corners):
     ap = argparse.ArgumentParser()
@@ -82,6 +91,7 @@ def get_trackers(vs, frame_name, corners):
 
     ret, frame = vs.read()
     obj_locations = []
+    
 
     # loop over frames from the video stream
     while ret:
@@ -128,7 +138,14 @@ def get_trackers(vs, frame_name, corners):
     # if we are using a webcam, release the pointer
     if not args.get(frame_name, False):
         vs.release()
-
+        
+    if game_over == True:
+        
+        player_1 = Player()
+        player_2 = Player()
+        ret = False
+        vs.release()
+        
     # otherwise, release the file pointer
     else:
         vs.release()
@@ -137,6 +154,7 @@ def get_trackers(vs, frame_name, corners):
     cv2.destroyAllWindows()
 
     return obj_locations
+        
 
 frame_name = "try"
 vs = cv2.VideoCapture(0)
@@ -158,6 +176,8 @@ corners = np.asarray(arena.get_corners())
 border_px = np.where(np.all(frame == (255, 0, 0), -1))
 
 obj_locations = get_trackers(vs, frame_name, corners)
+
+
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
