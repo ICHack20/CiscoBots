@@ -43,5 +43,6 @@ if __name__=="__main__":
     ip = f.readlines()[robot_to_control]
     f.close()
     print(ip)
+    ip = ip.strip()
     c = Control(ip)
     c.main(ip)
