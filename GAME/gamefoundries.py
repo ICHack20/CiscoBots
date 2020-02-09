@@ -105,7 +105,7 @@ def get_trackers(vs, frame_name, corners):
             cv2.rectangle(frame, (x, y), (x + w, y + h), colors[i], 2)
             obj_locations.append([(x, y), (x + w, y + h), col_str[i]])
         # show the output frame
-        cv2.polylines(frame, corners, (255,0,0), 2)
+        cv2.polylines(frame, [corners], True, (255,0,0), 2)
         cv2.imshow(frame_name, frame)
         key = cv2.waitKey(1) & 0xFF
 
@@ -164,7 +164,6 @@ arena.set_borders()
 
 #Get the pixels of the border
 corners = np.asarray(arena.get_corners())
-print(corners)
 border_px = np.where(np.all(frame == (255, 0, 0), -1))
 
 obj_locations = get_trackers(vs, frame_name, corners)
