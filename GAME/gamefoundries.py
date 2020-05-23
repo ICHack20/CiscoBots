@@ -82,13 +82,15 @@ def check_center(center, boundary, color):
 
 class Player:
     def __init__(self, status):
-        self.score = 0
-        self.pl = status[1];
+        self.opposer_score = 0
+        self.where = True
+        self.pl = status[1]
+        self.reset = False
     
     def update_score(self, status):
-        if status[0] == True and score > 0:
-            score = score + 1
-            game_over = True;
+        if status[0] == False and self.opposer_score >= 0:
+            self.opposer_score = self.opposer_score + 1
+            self.reset = True
             
 # construct the argument parser and parse the arguments
 def get_trackers(vs, frame_name, corners):
@@ -119,6 +121,7 @@ def get_trackers(vs, frame_name, corners):
 
     # loop over frames from the video stream
     while ret:
+        player1 = Player
         ret, frame = vs.read()
         frame = frame[1] if args.get(frame_name, False) else frame
         
@@ -179,7 +182,6 @@ def get_trackers(vs, frame_name, corners):
     cv2.destroyAllWindows()
 
     return obj_locations
-        
 
 frame_name = "try"
 vs = cv2.VideoCapture(0)
@@ -204,8 +206,8 @@ print(border_px[0][20])
 # print (check_center((255, 255), border_px, 'b'))
 print(check_center((255, 255), border_px, 'b'))
 
-# obj_locations = get_trackers(vs, frame_name, corners)
-# print(obj_locations)
+obj_locations = get_trackers(vs, frame_name, corners)
+print(obj_locations)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
